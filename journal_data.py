@@ -8,7 +8,7 @@ def list_journals(root_path: Path) -> list[str]:
         if item.is_dir():
             directory_names.append(item.name)
 
-    return directory_names
+    return sorted(directory_names, reverse=True)
 
 # List journal entries  from a given journal path
 def list_entries(journal_path: Path) -> list[str]:

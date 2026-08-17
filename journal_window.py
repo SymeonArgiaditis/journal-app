@@ -16,16 +16,16 @@ class JournalWindow(QMainWindow):
         self.setCentralWidget(window_container)
 
         # Create widgets
-        sidebar = QListWidget()
-        content = QTextEdit()
+        self.sidebar = QListWidget()
+        self.content = QTextEdit()
 
         # Create basic layout
         layout = QHBoxLayout(window_container)
-        layout.addWidget(sidebar, 1)
-        layout.addWidget(content, 3)
+        layout.addWidget(self.sidebar, 1)
+        layout.addWidget(self.content, 3)
 
         # Fill ListWidget with real journals from disk
         journals_path = Path(__file__).parent / "Journals"
 
         for journal_name in list_journals(journals_path):
-            sidebar.addItem(journal_name)
+            self.sidebar.addItem(journal_name)

@@ -10,6 +10,7 @@ def list_journals(root_path: Path) -> list[str]:
 
     return directory_names
 
+# List journal entries  from a given journal path
 def list_entries(journal_path: Path) -> list[str]:
     entry_list: list[str] = []
 

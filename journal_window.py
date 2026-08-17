@@ -1,7 +1,7 @@
-from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout
+from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QTextEdit
 
-# Temporary import of QPushButton and QListWidget
-from PySide6.QtWidgets import QPushButton, QListWidget
+# Temporary import of  QListWidget
+from PySide6.QtWidgets import QListWidget
 
 class JournalWindow(QMainWindow):
     def __init__(self):
@@ -17,7 +17,7 @@ class JournalWindow(QMainWindow):
 
         # Create widgets
         sidebar = QListWidget()
-        content = QPushButton("content")
+        content = QTextEdit()
 
         # Create basic layout
         layout = QHBoxLayout(window_container)

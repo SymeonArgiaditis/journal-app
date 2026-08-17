@@ -17,23 +17,34 @@ class JournalWindow(QMainWindow):
 
         # Create widgets
         self.sidebar = QListWidget()
+        self.entry_list = QListWidget()
         self.content = QTextEdit()
 
         # Create basic layout
         layout = QHBoxLayout(window_container)
         layout.addWidget(self.sidebar, 1)
-        layout.addWidget(self.content, 3)
+        layout.addWidget(self.entry_list, 1)
+        layout.addWidget(self.content, 4)
 
-        # Fill ListWidget with real journals from disk
+        # Populate ListWidget with real journals from disk
         self.journals_path = Path(__file__).parent / "Journals"
 
         for journal_name in list_journals(self.journals_path):
             self.sidebar.addItem(journal_name)
 
+        # Add interactivity to journal button on click
         self.sidebar.itemClicked.connect(self.on_journal_clicked)
+        # Add interactivity to entry button on click
+        self.entry_list.itemClicked.connect(self.on_entry_clicked)
+
 
     def on_journal_clicked(self, item: QListWidgetItem):
+        self.entry_list.clear()
         journal_path = self.journals_path / item.text()
-        entries_text = list_entries(journal_path)
+        entries = list_entries(journal_path)
 
-        self.content.setPlainText('\n'.join(entries_text))
+        for entry in entries:
+            self.entry_list.addItem(entry)
+
+    def on_entry_clicked(self, item: QListWidgetItem):
+        pass

@@ -41,7 +41,7 @@ class JournalWindow(QMainWindow):
 
     def on_journal_clicked(self, item: QListWidgetItem):
         self.entry_list.clear()
-        # Local journal_path
+        # "Journals/[current_journal]": Local journal_path
         journal_path = self.journals_path / item.text()
         entries = list_entries(journal_path)
 
@@ -52,5 +52,9 @@ class JournalWindow(QMainWindow):
         self.current_journal_path = journal_path
 
     def on_entry_clicked(self, item: QListWidgetItem):
+        # "Journals/[current_journal]/[entry.md]":Local entry_path
         entry_path = self.journals_path / self.current_journal_path / item.text()
-        print(entry_path)
+
+        # Read current entry and display in content menu
+        entry_text = entry_path.read_text()
+        self.content.setMarkdown(entry_text)

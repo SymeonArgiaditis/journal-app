@@ -26,9 +26,10 @@ class JournalWindow(QMainWindow):
         layout.addWidget(self.entry_list, 1)
         layout.addWidget(self.content, 4)
 
-        # Populate ListWidget with real journals from disk
+        # "Journals/": Set path
         self.journals_path = Path(__file__).parent / "Journals"
 
+        # Populate sidebar with real journals from disk
         for journal_name in list_journals(self.journals_path):
             self.sidebar.addItem(journal_name)
 
@@ -40,11 +41,16 @@ class JournalWindow(QMainWindow):
 
     def on_journal_clicked(self, item: QListWidgetItem):
         self.entry_list.clear()
+        # Local journal_path
         journal_path = self.journals_path / item.text()
         entries = list_entries(journal_path)
 
         for entry in entries:
             self.entry_list.addItem(entry)
 
+        # "Journals/[current_journal]": Set current instance journal_path
+        self.current_journal_path = journal_path
+
     def on_entry_clicked(self, item: QListWidgetItem):
-        pass
+        entry_path = self.journals_path / self.current_journal_path / item.text()
+        print(entry_path)

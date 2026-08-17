@@ -1,7 +1,4 @@
-from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QTextEdit
-
-# Temporary import of  QListWidget
-from PySide6.QtWidgets import QListWidget
+from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QTextEdit, QListWidget
 
 class JournalWindow(QMainWindow):
     def __init__(self):

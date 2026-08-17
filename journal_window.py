@@ -1,4 +1,7 @@
 from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QTextEdit, QListWidget
+from pathlib import Path
+
+from journal_data import list_journals
 
 class JournalWindow(QMainWindow):
     def __init__(self):
@@ -21,6 +24,8 @@ class JournalWindow(QMainWindow):
         layout.addWidget(sidebar, 1)
         layout.addWidget(content, 3)
 
-        # Fill ListWidget with temporary entries
-        sidebar.addItem("2025 Journal")
-        sidebar.addItem("Travel Journal")
+        # Fill ListWidget with real journals from disk
+        journals_path = Path(__file__).parent / "Journals"
+
+        for journal_name in list_journals(journals_path):
+            sidebar.addItem(journal_name)

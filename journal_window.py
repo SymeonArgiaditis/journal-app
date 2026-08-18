@@ -22,7 +22,7 @@ class JournalWindow(QMainWindow):
         self.sidebar = QListWidget()
         self.entry_list = QListWidget()
         self.content = QTextEdit()
-        self.mode_button = QPushButton("Edit")
+        self.mode_button = QPushButton("Viewing")
 
         # Vertical content layout
         content_layout = QVBoxLayout()
@@ -35,8 +35,13 @@ class JournalWindow(QMainWindow):
         layout.addWidget(self.entry_list, 1)
         layout.addLayout(content_layout, 4)
 
-        # "Journals/": Set path
+        # "Journals/"
         self.journals_path = Path(__file__).parent / "Journals"
+
+        # Set content to Viewing Mode by default
+        self.content.setReadOnly(True)
+        # Set Mode Button to Disabled (grayed out) by default
+        self.mode_button.setEnabled(False)
 
         # Populate sidebar with real journals from disk
         for journal_name in list_journals(self.journals_path):
@@ -63,18 +68,25 @@ class JournalWindow(QMainWindow):
         self.entry_path = self.journal_path / item.text()
 
         # Read current entry and display in content menu
-        entry_text = self.entry_path.read_text()
-        self.content.setMarkdown(entry_text)
-        self.content.setReadOnly(True) #! Note to self: setReadOnly when clicking on entry, if only on journal == false
+        self.entry_text = self.entry_path.read_text()
+        self.content.setMarkdown(self.entry_text)
+
+        # Enable button and set mode to Viewing
+        self.mode_button.setEnabled(True)
+        self.mode_button.setText("Viewing")
+        self.content.setReadOnly(True)
 
     def toggle_mode(self):
-        print("Diagnostic Check: mode_button.clicked.connect()")
         if self.content.isReadOnly():
             # currently viewing -> set to editing
             self.content.setReadOnly(False)
-            print(f"setReadOnly({self.content.isReadOnly()}): Now editing")
+            self.content.setPlainText(self.entry_text)
+            self.mode_button.setText("Editing")
+            print(f"\033[93msetReadOnly({self.content.isReadOnly()}): Now editing\033[0m")
         else:
             # currently editing -> set to viewing
             self.content.setReadOnly(True)
-            print(f"setReadOnly({self.content.isReadOnly()}): Now viewing")
+            self.content.setMarkdown(self.entry_text)
+            self.mode_button.setText("Viewing")
+            print(f"\033[93msetReadOnly({self.content.isReadOnly()}): Now viewing\033[0m")
 

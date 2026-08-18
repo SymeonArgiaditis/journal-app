@@ -18,25 +18,22 @@ class JournalWindow(QMainWindow):
         window_container = QWidget()
         self.setCentralWidget(window_container)
 
-        # !!!!!!!!!!!!!!!
-        # window = QWidget()
-
         # Create widgets
         self.sidebar = QListWidget()
         self.entry_list = QListWidget()
         self.content = QTextEdit()
         self.mode_button = QPushButton("Edit")
 
-        content_button = QVBoxLayout()
-        content_button.addWidget(self.content)
-        content_button.addWidget(self.mode_button)
+        content_layout = QVBoxLayout()
+        content_layout.addWidget(self.content)
+        content_layout.addWidget(self.mode_button)
 
         # Create basic layout
         layout = QHBoxLayout(window_container)
         layout.addWidget(self.sidebar, 1)
         layout.addWidget(self.entry_list, 1)
-        # layout.addWidget(self.content, 4)
-        layout.addLayout(content_button, 4)
+        # !!!! layout.addWidget(self.content, 4)
+        layout.addLayout(content_layout, 4)
 
         # "Journals/": Set path
         self.journals_path = Path(__file__).parent / "Journals"

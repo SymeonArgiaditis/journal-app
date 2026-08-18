@@ -46,7 +46,8 @@ class JournalWindow(QMainWindow):
         self.sidebar.itemClicked.connect(self.on_journal_clicked)
         # Add interactivity to entry button on click
         self.entry_list.itemClicked.connect(self.on_entry_clicked)
-
+        # Add interactivity to toggle button
+        self.mode_button.clicked.connect(self.toggle_mode)
 
     def on_journal_clicked(self, item: QListWidgetItem):
         self.entry_list.clear()
@@ -60,10 +61,20 @@ class JournalWindow(QMainWindow):
     def on_entry_clicked(self, item: QListWidgetItem):
         # "Journals/[current_journal]/[entry.md]"
         self.entry_path = self.journal_path / item.text()
+
         # Read current entry and display in content menu
         entry_text = self.entry_path.read_text()
-        # Text will be editable for now, implementing viewing and editing toggle in later iteration
         self.content.setMarkdown(entry_text)
+        self.content.setReadOnly(True) #! Note to self: setReadOnly when clicking on entry, if only on journal == false
 
-    # Implement toggle to change between edit and viewing modes
-    # Freeze/Lock markdown for viewing -> Unfreeze for editing
+    def toggle_mode(self):
+        print("Diagnostic Check: mode_button.clicked.connect()")
+        if self.content.isReadOnly():
+            # currently viewing -> set to editing
+            self.content.setReadOnly(False)
+            print(f"setReadOnly({self.content.isReadOnly()}): Now editing")
+        else:
+            # currently editing -> set to viewing
+            self.content.setReadOnly(True)
+            print(f"setReadOnly({self.content.isReadOnly()}): Now viewing")
+

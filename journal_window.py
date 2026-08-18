@@ -3,6 +3,9 @@ from pathlib import Path
 
 from journal_data import list_journals, list_entries
 
+# Temporary import of QVBoxLayout and QPushButton!
+from PySide6.QtWidgets import QVBoxLayout, QPushButton
+
 class JournalWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -15,16 +18,25 @@ class JournalWindow(QMainWindow):
         window_container = QWidget()
         self.setCentralWidget(window_container)
 
+        # !!!!!!!!!!!!!!!
+        # window = QWidget()
+
         # Create widgets
         self.sidebar = QListWidget()
         self.entry_list = QListWidget()
         self.content = QTextEdit()
+        self.mode_button = QPushButton("Edit")
+
+        content_button = QVBoxLayout()
+        content_button.addWidget(self.content)
+        content_button.addWidget(self.mode_button)
 
         # Create basic layout
         layout = QHBoxLayout(window_container)
         layout.addWidget(self.sidebar, 1)
         layout.addWidget(self.entry_list, 1)
-        layout.addWidget(self.content, 4)
+        # layout.addWidget(self.content, 4)
+        layout.addLayout(content_button, 4)
 
         # "Journals/": Set path
         self.journals_path = Path(__file__).parent / "Journals"
@@ -59,3 +71,6 @@ class JournalWindow(QMainWindow):
         entry_text = entry_path.read_text()
         # Text will be editable for now, implementing viewing and editing toggle in later iteration
         self.content.setMarkdown(entry_text)
+
+    # Implement toggle to change between edit and viewing modes
+    # Freeze/Lock markdown for viewing -> Unfreeze for editing

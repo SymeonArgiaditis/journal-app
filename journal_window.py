@@ -24,15 +24,15 @@ class JournalWindow(QMainWindow):
         self.content = QTextEdit()
         self.mode_button = QPushButton("Edit")
 
+        # Vertical content layout
         content_layout = QVBoxLayout()
         content_layout.addWidget(self.content)
         content_layout.addWidget(self.mode_button)
 
-        # Create basic layout
+        # Basic window layout
         layout = QHBoxLayout(window_container)
         layout.addWidget(self.sidebar, 1)
         layout.addWidget(self.entry_list, 1)
-        # !!!! layout.addWidget(self.content, 4)
         layout.addLayout(content_layout, 4)
 
         # "Journals/": Set path

@@ -46,9 +46,10 @@ class JournalWindow(QMainWindow):
 
         # Set content to Viewing Mode by default
         self.content.setReadOnly(True)
-        # Set Mode Button to Disabled (grayed out) by default
+        # Set mode button to Disabled (grayed out) by default
         self.mode_button.setEnabled(False)
-        #! Also disable new entry button?
+        # Set new entry button to Disabled (grayed out) by default
+        self.new_entry_button.setEnabled(False)
 
         # Populate sidebar with real journals from disk
         for journal_name in list_journals(self.journals_path):

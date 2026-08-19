@@ -73,6 +73,9 @@ class JournalWindow(QMainWindow):
         for entry in entries:
             self.entry_list.addItem(entry)
 
+        # Enable new entry button ("+")
+        self.new_entry_button.setEnabled(True)
+
     def on_entry_clicked(self, item: QListWidgetItem):
         # "Journals/[current_journal]/[entry.md]"
         self.entry_path = self.journal_path / item.text()
@@ -81,7 +84,7 @@ class JournalWindow(QMainWindow):
         self.entry_text = self.entry_path.read_text()
         self.content.setMarkdown(self.entry_text)
 
-        # Enable button and set mode to Viewing
+        # Enable mode button and set mode to Viewing
         self.mode_button.setEnabled(True)
         self.mode_button.setText("Viewing")
         self.content.setReadOnly(True)

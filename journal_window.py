@@ -10,6 +10,8 @@ from PySide6.QtWidgets import (
 )
 
 from pathlib import Path
+from datetime import datetime
+
 from journal_data import list_journals, list_entries
 
 class JournalWindow(QMainWindow):
@@ -96,7 +98,16 @@ class JournalWindow(QMainWindow):
         self.content.setReadOnly(True)
 
     def on_new_entry_clicked(self):
-        print("new entry clicked")
+        # ! Temporary placeholder code
+        now = datetime.now()
+        filename = now.strftime("%Y-%m-%d_%H%M.md")
+
+        file_path = self.journal_path / filename
+
+        file_path.write_text("")
+
+        print(file_path)
+        print(filename)
 
     def on_mode_button_clicked(self):
         if self.content.isReadOnly():

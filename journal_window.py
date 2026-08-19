@@ -1,10 +1,16 @@
-from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QTextEdit, QListWidget, QListWidgetItem
+from PySide6.QtWidgets import (
+    QHBoxLayout,
+    QMainWindow,
+    QPushButton,
+    QListWidget,
+    QListWidgetItem,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
+
 from pathlib import Path
-
 from journal_data import list_journals, list_entries
-
-# Temporary import of QVBoxLayout and QPushButton!
-from PySide6.QtWidgets import QVBoxLayout, QPushButton
 
 class JournalWindow(QMainWindow):
     def __init__(self):

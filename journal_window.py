@@ -23,12 +23,12 @@ class JournalWindow(QMainWindow):
         self.entry_list = QListWidget()
         self.content = QTextEdit()
         self.mode_button = QPushButton("Viewing")
-        self.add_entry_button = QPushButton("+")
+        self.new_entry_button = QPushButton("+")
 
         # Vertical entry list layout
         entry_list_layout = QVBoxLayout()
         entry_list_layout.addWidget(self.entry_list)
-        entry_list_layout.addWidget(self.add_entry_button)
+        entry_list_layout.addWidget(self.new_entry_button)
 
         # Vertical content layout
         content_layout = QVBoxLayout()
@@ -48,17 +48,20 @@ class JournalWindow(QMainWindow):
         self.content.setReadOnly(True)
         # Set Mode Button to Disabled (grayed out) by default
         self.mode_button.setEnabled(False)
+        #! Also disable new entry button?
 
         # Populate sidebar with real journals from disk
         for journal_name in list_journals(self.journals_path):
             self.sidebar.addItem(journal_name)
 
-        # Add interactivity to journal button on click
+        # Add interactivity to clicking journal
         self.sidebar.itemClicked.connect(self.on_journal_clicked)
-        # Add interactivity to entry button on click
+        # Add interactivity to clicking entries
         self.entry_list.itemClicked.connect(self.on_entry_clicked)
-        # Add interactivity to toggle button
-        self.mode_button.clicked.connect(self.toggle_mode)
+        # Add interactivity to clicking mode button
+        self.mode_button.clicked.connect(self.on_mode_button_clicked)
+        # Add interactivity to clicking "+" (new entry)
+        self.new_entry_button.clicked.connect(self.on_new_entry_clicked)
 
     def on_journal_clicked(self, item: QListWidgetItem):
         self.entry_list.clear()
@@ -82,17 +85,18 @@ class JournalWindow(QMainWindow):
         self.mode_button.setText("Viewing")
         self.content.setReadOnly(True)
 
-    def toggle_mode(self):
+    def on_new_entry_clicked(self):
+        print("new entry clicked")
+
+    def on_mode_button_clicked(self):
         if self.content.isReadOnly():
-            # currently viewing -> set to editing
+            # Currently viewing -> set to editing
             self.content.setReadOnly(False)
             self.content.setPlainText(self.entry_text)
             self.mode_button.setText("Editing")
-            print(f"\033[93msetReadOnly({self.content.isReadOnly()}): Now editing\033[0m")
         else:
-            # currently editing -> set to viewing
+            # Currently editing -> set to viewing
             self.content.setReadOnly(True)
             self.content.setMarkdown(self.entry_text)
             self.mode_button.setText("Viewing")
-            print(f"\033[93msetReadOnly({self.content.isReadOnly()}): Now viewing\033[0m")
-
+            

@@ -23,6 +23,12 @@ class JournalWindow(QMainWindow):
         self.entry_list = QListWidget()
         self.content = QTextEdit()
         self.mode_button = QPushButton("Viewing")
+        self.add_entry_button = QPushButton("+")
+
+        # Vertical entry list layout
+        entry_list_layout = QVBoxLayout()
+        entry_list_layout.addWidget(self.entry_list)
+        entry_list_layout.addWidget(self.add_entry_button)
 
         # Vertical content layout
         content_layout = QVBoxLayout()
@@ -32,7 +38,7 @@ class JournalWindow(QMainWindow):
         # Basic window layout
         layout = QHBoxLayout(window_container)
         layout.addWidget(self.sidebar, 1)
-        layout.addWidget(self.entry_list, 1)
+        layout.addLayout(entry_list_layout, 1)
         layout.addLayout(content_layout, 4)
 
         # "Journals/"

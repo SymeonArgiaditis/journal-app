@@ -76,9 +76,9 @@ class JournalWindow(QMainWindow):
         self.entry_list.clear()
         entries = list_entries(journal_path)
 
+        # Populate list
         for entry in entries:
             self.entry_list.addItem(entry)
-
 
     def on_journal_clicked(self, item: QListWidgetItem):
         # "Journals/[current_journal]"
@@ -103,16 +103,13 @@ class JournalWindow(QMainWindow):
         self.content.setReadOnly(True)
 
     def on_new_entry_clicked(self):
-        # ! Temporary placeholder code
         now = datetime.now()
         filename = now.strftime("%Y-%m-%d_%H%M.md")
 
         file_path = self.journal_path / filename
 
-        print(self.journal_path.name) # 2024
-        print(file_path) # C:\Projects\journal_app\Journals\2024\2026-08-20_1159.md
-        print(filename) # 2026-08-20_1159.md
-        # file_path.write_text("")
+        file_path.write_text("")
+        self.refresh_entry_list(self.journal_path)
 
     def on_mode_button_clicked(self):
         if self.content.isReadOnly():

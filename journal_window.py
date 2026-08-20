@@ -1,5 +1,16 @@
-from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QTextEdit, QListWidget, QListWidgetItem
+from PySide6.QtWidgets import (
+    QHBoxLayout,
+    QMainWindow,
+    QPushButton,
+    QListWidget,
+    QListWidgetItem,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
+
 from pathlib import Path
+from datetime import datetime
 
 from journal_data import list_journals, list_entries
 
@@ -19,43 +30,96 @@ class JournalWindow(QMainWindow):
         self.sidebar = QListWidget()
         self.entry_list = QListWidget()
         self.content = QTextEdit()
+        self.mode_button = QPushButton("Viewing")
+        self.new_entry_button = QPushButton("+")
 
-        # Create basic layout
+        # Vertical entry list layout
+        entry_list_layout = QVBoxLayout()
+        entry_list_layout.addWidget(self.entry_list)
+        entry_list_layout.addWidget(self.new_entry_button)
+
+        # Vertical content layout
+        content_layout = QVBoxLayout()
+        content_layout.addWidget(self.content)
+        content_layout.addWidget(self.mode_button)
+
+        # Basic window layout
         layout = QHBoxLayout(window_container)
         layout.addWidget(self.sidebar, 1)
-        layout.addWidget(self.entry_list, 1)
-        layout.addWidget(self.content, 4)
+        layout.addLayout(entry_list_layout, 1)
+        layout.addLayout(content_layout, 4)
 
-        # "Journals/": Set path
+        # "Journals/"
         self.journals_path = Path(__file__).parent / "Journals"
+
+        # Set content to Viewing Mode by default
+        self.content.setReadOnly(True)
+        # Set mode button to Disabled (grayed out) by default
+        self.mode_button.setEnabled(False)
+        # Set new entry button to Disabled (grayed out) by default
+        self.new_entry_button.setEnabled(False)
 
         # Populate sidebar with real journals from disk
         for journal_name in list_journals(self.journals_path):
             self.sidebar.addItem(journal_name)
 
-        # Add interactivity to journal button on click
+        # Add interactivity to clicking journal
         self.sidebar.itemClicked.connect(self.on_journal_clicked)
-        # Add interactivity to entry button on click
+        # Add interactivity to clicking entries
         self.entry_list.itemClicked.connect(self.on_entry_clicked)
+        # Add interactivity to clicking mode button
+        self.mode_button.clicked.connect(self.on_mode_button_clicked)
+        # Add interactivity to clicking "+" (new entry)
+        self.new_entry_button.clicked.connect(self.on_new_entry_clicked)
 
-
-    def on_journal_clicked(self, item: QListWidgetItem):
+    def refresh_entry_list(self, journal_path: Path):
         self.entry_list.clear()
-        # "Journals/[current_journal]": Local journal_path
-        journal_path = self.journals_path / item.text()
         entries = list_entries(journal_path)
 
+        # Populate list
         for entry in entries:
             self.entry_list.addItem(entry)
 
-        # "Journals/[current_journal]": Set current instance journal_path
-        self.current_journal_path = journal_path
+    def on_journal_clicked(self, item: QListWidgetItem):
+        # "Journals/[current_journal]"
+        self.journal_path = self.journals_path / item.text()
+
+        self.refresh_entry_list(self.journal_path)
+
+        # Enable new entry button ("+")
+        self.new_entry_button.setEnabled(True)
 
     def on_entry_clicked(self, item: QListWidgetItem):
-        # "Journals/[current_journal]/[entry.md]":Local entry_path
-        entry_path = self.current_journal_path / item.text()
+        # "Journals/[current_journal]/[entry.md]"
+        self.entry_path = self.journal_path / item.text()
 
         # Read current entry and display in content menu
-        entry_text = entry_path.read_text()
-        # Text will be editable for now, implementing viewing and editing toggle in later iteration
-        self.content.setMarkdown(entry_text)
+        self.entry_text = self.entry_path.read_text()
+        self.content.setMarkdown(self.entry_text)
+
+        # Enable mode button and set mode to Viewing
+        self.mode_button.setEnabled(True)
+        self.mode_button.setText("Viewing")
+        self.content.setReadOnly(True)
+
+    def on_new_entry_clicked(self):
+        now = datetime.now()
+        filename = now.strftime("%Y-%m-%d_%H%M.md")
+
+        file_path = self.journal_path / filename
+
+        file_path.write_text("")
+        self.refresh_entry_list(self.journal_path)
+
+    def on_mode_button_clicked(self):
+        if self.content.isReadOnly():
+            # Currently viewing -> set to editing
+            self.content.setReadOnly(False)
+            self.content.setPlainText(self.entry_text)
+            self.mode_button.setText("Editing")
+        else:
+            # Currently editing -> set to viewing
+            self.content.setReadOnly(True)
+            self.content.setMarkdown(self.entry_text)
+            self.mode_button.setText("Viewing")
+            

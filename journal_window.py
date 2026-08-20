@@ -72,14 +72,19 @@ class JournalWindow(QMainWindow):
         # Add interactivity to clicking "+" (new entry)
         self.new_entry_button.clicked.connect(self.on_new_entry_clicked)
 
-    def on_journal_clicked(self, item: QListWidgetItem):
+    def refresh_entry_list(self, journal_path: Path):
         self.entry_list.clear()
-        # "Journals/[current_journal]"
-        self.journal_path = self.journals_path / item.text()
-        entries = list_entries(self.journal_path)
+        entries = list_entries(journal_path)
 
         for entry in entries:
             self.entry_list.addItem(entry)
+
+
+    def on_journal_clicked(self, item: QListWidgetItem):
+        # "Journals/[current_journal]"
+        self.journal_path = self.journals_path / item.text()
+
+        self.refresh_entry_list(self.journal_path)
 
         # Enable new entry button ("+")
         self.new_entry_button.setEnabled(True)
@@ -104,10 +109,10 @@ class JournalWindow(QMainWindow):
 
         file_path = self.journal_path / filename
 
-        file_path.write_text("")
-
-        print(file_path)
-        print(filename)
+        print(self.journal_path.name) # 2024
+        print(file_path) # C:\Projects\journal_app\Journals\2024\2026-08-20_1159.md
+        print(filename) # 2026-08-20_1159.md
+        # file_path.write_text("")
 
     def on_mode_button_clicked(self):
         if self.content.isReadOnly():
